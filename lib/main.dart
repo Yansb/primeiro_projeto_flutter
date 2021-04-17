@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:BullsEye/score.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,7 +39,7 @@ class _GamePageState extends State<GamePage> {
   @override
   void initState() {
     super.initState();
-    _model = GameModel(50);
+    _model = GameModel(Random().nextInt(100) + 1);
   }
 
   @override
@@ -69,6 +71,15 @@ class _GamePageState extends State<GamePage> {
     );
   }
 
+  int _sliderValue() => _model.current;
+
+  int _pointsForCurrentRound() {
+    int maximumScore = 100;
+    int difference = (_sliderValue() - _model.target).abs();
+
+    return maximumScore - difference;
+  }
+
   void _showAlert(BuildContext context) {
     Widget okButton = TextButton(
         onPressed: () {
@@ -82,7 +93,8 @@ class _GamePageState extends State<GamePage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Hello There'),
-            content: Text("The slider value is: ${_model.current}"),
+            content: Text("The slider value is: ${_sliderValue()}.\n" +
+                "You scored ${_pointsForCurrentRound()} points this round"),
             actions: <Widget>[
               okButton,
             ],
