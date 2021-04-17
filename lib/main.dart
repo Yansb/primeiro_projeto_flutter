@@ -1,5 +1,9 @@
+import 'package:BullsEye/score.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:BullsEye/prompt.dart';
+import 'control.dart';
+import 'gamemodel.dart';
 
 void main() => runApp(BullsEyeApp());
 
@@ -28,6 +32,13 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   bool _alertIsVisible = false;
+  GameModel _model;
+
+  @override
+  void initState() {
+    super.initState();
+    _model = GameModel(50);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +47,8 @@ class _GamePageState extends State<GamePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'Hot reload is awesome',
-              style:
-                  TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
-            ),
+            Prompt(targetValue: _model.target),
+            Control(model: _model),
             TextButton(
               child: Text(
                 "Hit Me!",
@@ -51,6 +59,10 @@ class _GamePageState extends State<GamePage> {
                 _showAlert(context);
               },
             ),
+            Score(
+              round: _model.round,
+              totalScore: _model.totalScore,
+            )
           ],
         ),
       ),
@@ -70,7 +82,7 @@ class _GamePageState extends State<GamePage> {
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Hello There'),
-            content: Text("This is my first pop-up"),
+            content: Text("The slider value is: ${_model.current}"),
             actions: <Widget>[
               okButton,
             ],
